@@ -1,0 +1,9 @@
+Generelle Regeln:
+Runde Klammern = MUSS
+Eckige Klammern = OPTIONAL
+
+Alle Befehle beginnen mit einem Rufezeichen!
+
+
+chat command style:
+!(COMMAND) (PLAYER) [PLAYER/ARGS] [ARGS]

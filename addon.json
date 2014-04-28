@@ -1,0 +1,12 @@
+{
+	"title"		:	"PatchProtect (PAdmin)",
+	"type"		:	"tool",
+	"tags"		:	[ "build" ],
+	"ignore"	:
+	[
+		"*.git*",
+		"*.bat",
+		"*.jpg",
+		"*.md"
+	]
+}
