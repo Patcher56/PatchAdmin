@@ -1,10 +1,10 @@
----------------------
---  CREATE TABLES  --
----------------------
+-------------------------
+--  INITIALIZE TABLES  --
+-------------------------
 
-sh_PAdmin = {}
 sv_PAdmin = {}
 cl_PAdmin = {}
+sh_PAdmin = {}
 
 
 
@@ -13,7 +13,8 @@ cl_PAdmin = {}
 -------------------------
 
 AddCSLuaFile()
-AddCSLuaFile("patchadmin/client/chat_style.lua")
+--AddCSLuaFile("patchadmin/client/chat_style.lua")
+
 
 
 --------------------------------
@@ -22,10 +23,12 @@ AddCSLuaFile("patchadmin/client/chat_style.lua")
 
 if SERVER then
 
-	include( "patchadmin/server/chat.lua" )
+	include( "patchadmin/server/admin.lua" )
 
 else
 
-	include( "patchadmin/client/chat_style.lua" )
+	--include( "patchadmin/client/chat_style.lua" )
 	
 end
+
+print( "padmin geladen..." )

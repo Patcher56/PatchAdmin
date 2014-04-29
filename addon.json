@@ -1,5 +1,5 @@
 {
-	"title"		:	"PatchProtect (PAdmin)",
+	"title"		:	"PatchAdmin (PAdmin)",
 	"type"		:	"tool",
 	"tags"		:	[ "build" ],
 	"ignore"	:
