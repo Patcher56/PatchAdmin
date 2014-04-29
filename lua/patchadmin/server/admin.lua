@@ -21,8 +21,9 @@ function sv_PAdmin.chat( ply, text, public )
 
 		local cmd = string.Explode( " ", text )
 
-		if table.Count( sv_PAdmin.check_player( cmd[ 2 ] ) ) == 1 then
-			cmd[ 2 ] = sv_PAdmin.check_player( cmd[ 2 ] )
+		local player = sv_PAdmin.check_player( cmd[ 2 ] )
+		if table.Count( player ) == 1 then
+			cmd[ 2 ] = player
 		end
 
 		return ""
