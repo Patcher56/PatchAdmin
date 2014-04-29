@@ -6,4 +6,23 @@ Alle Befehle beginnen mit einem Rufezeichen!
 
 
 chat command style:
-!(COMMAND) (PLAYER) [PLAYER/ARGS] [ARGS]
+!(COMMAND) [PLAYER/ARGS] [ARGS]
+
+PLUGIN CREATION:
+
+local Plugin = {
+	
+	name = "PLUGINNAME",
+	command = "PLUGINCOMMAND",
+	args_required = { "ARG1", "ARG2" }, --you can add as many as you want
+	args_optional = { "OPTIONAL1", "OPTIONAL2" } --you can add as many as you want
+
+}
+
+function Plugin:Call( ply, args )
+
+	--THERE GOES YOUR STUFF
+
+end
+
+sv_PAdmin.AddPlugin( Plugin )

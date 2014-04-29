@@ -23,7 +23,16 @@ AddCSLuaFile()
 
 if SERVER then
 
+	include( "patchadmin/server/sql.lua" )
 	include( "patchadmin/server/admin.lua" )
+	include( "patchadmin/server/plugins.lua" )
+	
+	local files, directories = file.Find( "patchadmin/plugins/*.lua", "LUA" )
+	table.foreach( files, function(key, plugin)
+
+		include( "patchadmin/plugins/" .. plugin )
+
+	end)
 
 else
 
