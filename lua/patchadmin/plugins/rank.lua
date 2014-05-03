@@ -33,6 +33,10 @@ function Plugin:Call( ply, args )
 
 	end
 
+	sv_PAdmin.notify( nil, {"lightblue", ply:Nick(), "white", " ranked ", "lightblue", pl:Nick(), "white", " to a ", "red", args["rank"] })
+
+
+
 end
 
 sv_PAdmin.AddPlugin( Plugin )

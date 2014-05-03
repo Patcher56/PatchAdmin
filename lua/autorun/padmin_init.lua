@@ -13,7 +13,7 @@ sh_PAdmin = {}
 -------------------------
 
 AddCSLuaFile()
---AddCSLuaFile("patchadmin/client/chat_style.lua")
+AddCSLuaFile("patchadmin/client/chat_functions.lua")
 
 
 
@@ -36,8 +36,8 @@ if SERVER then
 
 else
 
-	--include( "patchadmin/client/chat_style.lua" )
+	include( "patchadmin/client/chat_functions.lua" )
 	
 end
 
-print( "padmin geladen..." )
+print( "PatchAdmin geladen..." )

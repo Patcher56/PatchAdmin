@@ -1,35 +1,14 @@
-function sv_PAdmin.loadSettings()
+--local sql_tables= { "ranks", "bans" }
 
-	local function createTable()
+function sv_PAdmin.loadSettings( tablename )
+	sql.Query( "DROP TABLE padmin_ranks" )
+	--sql.Query( "DROP TABLE padmin_bans" )
 
-		sql.Query( "CREATE TABLE IF NOT EXISTS padmin_ranks('uniqueid' TEXT, 'rank' TEXT);" )
-		
-		MsgC(
-			Color(255, 150, 0),
-			"[PatchAdmin] Created new Ranks-Table\n"
-		)
-
-	end
-
-	if !sql.TableExists( "padmin_ranks" ) then
-
-		createTable()
-
-	else
-
-		local existing = sql.Query( "PRAGMA table_info(padmin_ranks);" )
-
-		if existing[2] == nil then
-			--sql.Query( "DROP TABLE padmin_ranks" )
-			MsgC(
-				Color(255, 0, 0),
-				"[PatchAdmin] There was an error with the Ranks-Table. We deleted it to make a new working one!\n"
-			)
-
-		end
-
-	end
+	sql.Query( "CREATE TABLE IF NOT EXISTS padmin_ranks(uniqueid INTEGER, 'rank' TEXT);" )
+	sql.Query( "CREATE TABLE IF NOT EXISTS padmin_bans(uniqueid INTEGER, time REAL);" )
 	
 end
+
+--table.foreach(  )
 
 sv_PAdmin.loadSettings()
