@@ -13,7 +13,7 @@ sh_PAdmin = {}
 -------------------------
 
 AddCSLuaFile()
-AddCSLuaFile("patchadmin/client/chat_functions.lua")
+AddCSLuaFile( "patchadmin/client/chat_functions.lua" )
 
 
 
@@ -28,11 +28,11 @@ if SERVER then
 	include( "patchadmin/server/plugins.lua" )
 	
 	local files, directories = file.Find( "patchadmin/plugins/*.lua", "LUA" )
-	table.foreach( files, function(key, plugin)
+	table.foreach( files, function( key, plugin )
 
 		include( "patchadmin/plugins/" .. plugin )
 
-	end)
+	end )
 
 else
 

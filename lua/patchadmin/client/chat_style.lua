@@ -1,8 +1,9 @@
+--[[
 local w = 600
 local h = 270
 
 local function chatType( isTeamChat )
-	--[[local chat_field = vgui.Create( "DTextEntry" )	-- create the form as a child of frame
+	local chat_field = vgui.Create( "DTextEntry" )	-- create the form as a child of frame
 	chat_field:SetPos( 20, 2 * ScrH() / 4 + 300 - 15 - 20 )
 	chat_field:SetSize( 300 - 40, 20 )
 	chat_field:SetText( "" )
@@ -14,13 +15,14 @@ local function chatType( isTeamChat )
     else
         print( "Player started typing a message in teamchat." )
     end
-    --return true
+    return true
 
-    ]]
+    
 end
 hook.Add( "StartChat", "Chat", chatType )
 
 local function drawNewChatBox()
-	--draw.RoundedBox( 6, 15, 2 * ScrH() / 4, 800, 300, Color( 255, 255, 255, 150 ) )
+	draw.RoundedBox( 6, 15, 2 * ScrH() / 4, 800, 300, Color( 255, 255, 255, 150 ) )
 end
-hook.Add( "HUDPaint", "drawNewChatBox", drawNewChatBox)
+hook.Add( "HUDPaint", "drawNewChatBox", drawNewChatBox )
+]]

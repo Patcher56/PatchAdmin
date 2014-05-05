@@ -9,12 +9,12 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	if args["player"] != nil and !args["player"]:IsPlayer( ) then return end
+	local pl = args["player"]
+	if pl == nil or !pl:IsPlayer() then return end
 
-	if sql.Query( "SELECT time FROM padmin_bans WHERE uniqueid = " .. args["player"]:UniqueID() ) then
+	if sql.Query( "SELECT time FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() ) then
 
-		print("unbanned")
-		sql.Query("DELETE FROM padmin_bans WHERE uniqueid = " .. args["player"]:UniqueID() )
+		sql.Query("DELETE FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() )
 
 	end
 

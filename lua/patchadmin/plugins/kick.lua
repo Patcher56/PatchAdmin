@@ -9,11 +9,12 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	if args["player"] != nil and !args["player"]:IsPlayer( ) then return end
+	local pl = args["player"]
+	if pl != nil and !pl:IsPlayer() then return end
 
 	local reason = args["reason"] or "No reason specified"
 
-	args["player"]:Kick( "Kicked by " .. ply:Nick() .. "! (" .. reason .. ")" )
+	pl:Kick( "Kicked by " .. ply:Nick() .. "! (" .. reason .. ")" )
 
 end
 
