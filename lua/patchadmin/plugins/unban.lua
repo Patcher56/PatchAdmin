@@ -14,7 +14,7 @@ function Plugin:Call( ply, args )
 
 	if sql.Query( "SELECT time FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() ) then
 
-		sql.Query("DELETE FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() )
+		sql.Query( "DELETE FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() )
 
 	end
 

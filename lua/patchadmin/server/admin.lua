@@ -39,15 +39,18 @@ function sv_PAdmin.chat( ply, text, public )
 		local cmd = string.Explode( " ", text )
 		cmd[1] = string.Replace( cmd[1], "!", "" )
 
-		local player = sv_PAdmin.getPlayer( cmd[ 2 ] ) or {}
-		if table.Count( player ) == 1 then
-			cmd[ 2 ] = player[1]
+		local plys = sv_PAdmin.getPlayer( cmd[2] ) or {}
+		if #plys == 1 then
+			cmd[2] = plys[1]
+		elseif #plys > 1 then
+			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Founded ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
+			return
 		end
 
 		-- CHECK REGISTERED PLUGINS
 		if table.HasValue( table.GetKeys( sv_PAdmin.Plugins ), cmd[1] ) then
 
-			local plugin = sv_PAdmin.Plugins[ cmd[1] ]
+			local plugin = sv_PAdmin.Plugins[cmd[1]]
 
 			-- Check if all required arguments are here, then call the function
 			if table.Count( cmd ) - 1 >= table.Count( plugin.args_required ) then
