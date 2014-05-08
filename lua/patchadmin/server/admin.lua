@@ -43,7 +43,7 @@ function sv_PAdmin.chat( ply, text, public )
 		if #plys == 1 then
 			cmd[2] = plys[1]
 		elseif #plys > 1 then
-			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Founded ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
+			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
 			return
 		end
 
