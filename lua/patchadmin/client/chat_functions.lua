@@ -6,6 +6,6 @@ end
 
 net.Receive( "padmin_notify", function()
 
-	cl_PAdmin.notify(net.ReadTable())
+	cl_PAdmin.notify( net.ReadTable() )
 
 end )

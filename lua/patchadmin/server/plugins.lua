@@ -2,7 +2,9 @@ sv_PAdmin.Plugins = {}
 
 function sv_PAdmin.AddPlugin( inf )
 
-	print( "Registered plugin " .. inf["name"] )
-	sv_PAdmin.Plugins[ string.lower( inf["name"] ) ] = inf
+	local name = string.lower( inf["name"] )
+	sv_PAdmin.Plugins[ name ] = inf
+
+	print( "Registered plugin " .. name )
 
 end

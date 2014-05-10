@@ -11,8 +11,8 @@ local Plugin = {
 function Plugin:Call( ply, args )
 
 	local pl = args["PLAYER_1"]
-
 	pl:Kill()
+	sv_PAdmin.notify( ply, { "lightblue", ply:Nick(), "white", " slayed ", "lightblue", pl:Nick(), "white", "!" } )
 
 end
 

@@ -30,17 +30,17 @@ function sv_PAdmin.getPlayer( plyname )
 
 end
 
-function sv_PAdmin.isPlugin( command )
+function sv_PAdmin.isPlugin( cmd )
 
-	local foundPlugin = false
+	local plug = false
 
 	table.foreach( sv_PAdmin.Plugins, function( name, plugin )
 
-		if plugin.command == command or table.HasValue( plugin.alias, command ) then foundPlugin = plugin end
+		if plugin["command"] == cmd or table.HasValue( plugin["alias"], cmd ) then plug = plugin end
 
 	end )
-
-	return foundPlugin
+	
+	return plug
 
 end
 

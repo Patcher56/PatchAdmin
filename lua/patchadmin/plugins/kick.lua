@@ -10,8 +10,8 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
-	if pl != nil and !pl:IsPlayer() then return end
+	local pl = args["PLAYER_1"] or ply
+	if !pl:IsPlayer() then return end
 
 	local reason = args["reason"] or "No reason specified"
 

@@ -4,55 +4,30 @@ local Plugin = {
 	command = "god",
 	alias = {},
 	args_required = {},
-	args_optional = { "PLAYER_1", "state", "time" }
+	args_optional = { "PLAYER_1" }
 
 }
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
-	if pl == nil then pl = ply end
-	
-	local state = tonumber( args["state"] )
+	local pl = args["PLAYER_1"] or ply
 
-	local function enable()
+	if GetConVarNumber("sbox_godmode") == 1 then
+		sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "ConVar ", "lightblue", "sbox_godmode", "white", " is currently ", "red", "enabled", "white", "!" } )
+		return
+	end
+
+	if pl.isGod == nil or !pl.isGod then
 
 		pl:GodEnable()
 		pl.isGod = true
-		print("god enabled")
+		sv_PAdmin.notify( ply, { "lightblue", ply:Nick(), "white", " enabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" } )
 
-	end
-
-	local function disable()
+	else
 
 		pl:GodDisable()
 		pl.isGod = false
-
-		print("god disabled")
-
-	end
-
-	if GetConVarNumber("sbox_godmode") == 1 then return	end
-
-	if state == nil then
-
-		if pl.isGod != nil and pl.isGod then
-
-			disable()
-
-		else
-
-			enable()
-
-		end
-
-	elseif state == 1 then
-
-		enable()
-
-	elseif state == 0 then
-
-		disable()
+		sv_PAdmin.notify( ply, { "lightblue", ply:Nick(), "white", " disabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" } )
 
 	end
 
