@@ -2,7 +2,8 @@ local Plugin = {
 	
 	name = "Ban",
 	command = "ban",
-	args_required = { "player" },
+	alias = {},
+	args_required = { "PLAYER_1" },
 	args_optional = { "time", "reason" }
 
 }
@@ -10,7 +11,7 @@ local Plugin = {
 -- BAN A PLAYER
 function Plugin:Call( ply, args )
 
-	local pl = args["player"]
+	local pl = args["PLAYER_1"]
 	if pl != nil and !pl:IsPlayer() then return end
 
 	local reason = args["reason"] or "No reason specified"

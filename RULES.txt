@@ -14,6 +14,7 @@ local Plugin = {
 	
 	name = "PLUGINNAME",
 	command = "PLUGINCOMMAND",
+	alias = { "ALIAS1", "ALIAS2" }, --you can add as many as you want
 	args_required = { "ARG1", "ARG2" }, --you can add as many as you want
 	args_optional = { "OPTIONAL1", "OPTIONAL2" } --you can add as many as you want
 
@@ -26,3 +27,7 @@ function Plugin:Call( ply, args )
 end
 
 sv_PAdmin.AddPlugin( Plugin )
+
+ARGUMENT KEYWORDS:
+
+PLAYER_SetAUniqueIDHere - PAdmin searches for the players and gives you the player-entity

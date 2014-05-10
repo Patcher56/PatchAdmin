@@ -30,6 +30,20 @@ function sv_PAdmin.getPlayer( plyname )
 
 end
 
+function sv_PAdmin.isPlugin( command )
+
+	local foundPlugin = false
+
+	table.foreach( sv_PAdmin.Plugins, function( name, plugin )
+
+		if plugin.command == command or table.HasValue( plugin.alias, command ) then foundPlugin = plugin end
+
+	end )
+
+	return foundPlugin
+
+end
+
 -- RUN THE COMMAND
 function sv_PAdmin.chat( ply, text, public )
 
@@ -39,26 +53,43 @@ function sv_PAdmin.chat( ply, text, public )
 		local cmd = string.Explode( " ", text )
 		cmd[1] = string.Replace( cmd[1], "!", "" )
 
-		local plys = sv_PAdmin.getPlayer( cmd[2] ) or {}
-		if #plys == 1 then
-			cmd[2] = plys[1]
-		elseif #plys > 1 then
-			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
-			return
+		local function searchPlayer( id )
+
+			local plys = sv_PAdmin.getPlayer( cmd[id + 1] ) or {}
+			if #plys == 1 then
+				cmd[id + 1] = plys[1]
+				return plys[1]
+			elseif #plys > 1 then
+				sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
+				return false
+			elseif #plys == 0 then
+				return false
+			end
+
 		end
 
 		-- CHECK REGISTERED PLUGINS
-		if table.HasValue( table.GetKeys( sv_PAdmin.Plugins ), cmd[1] ) then
+		local plugin = sv_PAdmin.isPlugin( cmd[1] )
 
-			local plugin = sv_PAdmin.Plugins[cmd[1]]
+		if plugin != false then
 
 			-- Check if all required arguments are here, then call the function
-			if table.Count( cmd ) - 1 >= table.Count( plugin.args_required ) then
+			if #cmd - 1 >= #plugin.args_required then
 
 				local args = {}
 				local plug_args = {}
 				table.Add( plug_args, plugin.args_required )
 				table.Add( plug_args, plugin.args_optional )
+
+				-- Check if the arguments contain the "player"-keyword
+				local players = {}
+				table.foreach( plug_args, function( id, arg )
+
+					if string.find( arg, "PLAYER" ) and cmd[id + 1] != nil then
+						table.insert( players, searchPlayer( id ) )
+					end 
+
+				end )
 
 				-- If there are more args than needed
 				local cp = #plug_args
@@ -71,6 +102,20 @@ function sv_PAdmin.chat( ply, text, public )
 				table.foreach( plug_args, function( key, value )
 					args[value] = cmd[ key + 1 ]
 				end )
+
+				local errors = {}
+				table.foreach( players, function( pid, player )
+
+					if player == false then table.insert( errors, pid ) end
+
+				end )
+
+				if #errors > 0 then
+
+					sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" } )
+					return ""
+
+				end
 
 				-- Run the command
 				plugin:Call( ply, args )

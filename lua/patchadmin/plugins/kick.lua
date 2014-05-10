@@ -2,14 +2,15 @@ local Plugin = {
 	
 	name = "Kick",
 	command = "kick",
-	args_required = { "player" },
+	alias = {},
+	args_required = { "PLAYER_1" },
 	args_optional = { "reason" }
 
 }
 
 function Plugin:Call( ply, args )
 
-	local pl = args["player"]
+	local pl = args["PLAYER_1"]
 	if pl != nil and !pl:IsPlayer() then return end
 
 	local reason = args["reason"] or "No reason specified"

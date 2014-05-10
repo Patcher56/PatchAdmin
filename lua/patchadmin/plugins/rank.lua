@@ -2,15 +2,16 @@ local Plugin = {
 	
 	name = "Rank",
 	command = "rank",
-	args_required = { "player", "rank" },
-	args_optional = { "test", "test2" }
+	alias = {},
+	args_required = { "PLAYER_1", "rank" },
+	args_optional = {}
 
 }
 
 -- RANK A PLAYER
 function Plugin:Call( ply, args )
 
-	local pl = args["player"]
+	local pl = args["PLAYER_1"]
 	local rank = args["rank"]
 	if rank == pl:GetUserGroup() then return end
 
