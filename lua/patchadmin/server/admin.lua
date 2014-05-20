@@ -127,6 +127,7 @@ function sv_PAdmin.chat( ply, text, public )
 
 			end
 			
+			return ""
 
 		else
 
@@ -134,8 +135,6 @@ function sv_PAdmin.chat( ply, text, public )
 			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" } )
 
 		end
-
-		return ""
 
 	end
 

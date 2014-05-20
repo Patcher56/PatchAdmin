@@ -21,9 +21,9 @@ function Plugin:Call( ply, args )
 
 		local check_rank = sql.Query( "SELECT rank FROM padmin_ranks WHERE uniqueid = " .. pl:UniqueID() )
 		if check_rank != nil and check_rank != false then
-			sql.Query( "UPDATE padmin_ranks SET 'rank' = '" .. pl:GetUserGroup() .. "' WHERE uniqueid = " .. pl:UniqueID() )
+			sql.Query( "UPDATE padmin_ranks SET rank = '" .. pl:GetUserGroup() .. "' WHERE uniqueid = " .. pl:UniqueID() )
 		else
-			sql.Query( "INSERT INTO padmin_ranks( 'uniqueid', 'rank' ) VALUES( '" .. pl:UniqueID() .. "', '" .. pl:GetUserGroup() .. "')" )
+			sql.Query( "INSERT INTO padmin_ranks( uniqueid, rank ) VALUES( " .. pl:UniqueID() .. ", '" .. pl:GetUserGroup() .. "')" )
 		end
 
 	end
@@ -35,12 +35,11 @@ end
 -- SET RANK IF A PLAYER JOINS THE SERVER
 function sv_PAdmin.SetupRanks( ply )
 
-	local rank = sql.QueryRow( "SELECT rank FROM padmin_ranks WHERE uniqueid = " .. ply:UniqueID() )
-
+	local rank = sql.QueryValue( "SELECT rank FROM padmin_ranks WHERE uniqueid = " .. ply:UniqueID() )
 	if rank == nil or rank == false then return end
 
-	if ply:GetUserGroup() != rank["rank"] then ply:SetUserGroup( rank["rank"] ) end
-
+	if ply:GetUserGroup() != rank then ply:SetUserGroup( rank ) end
+	
 end
 hook.Add( "PlayerInitialSpawn", "padmin_setupranks", sv_PAdmin.SetupRanks )
 
