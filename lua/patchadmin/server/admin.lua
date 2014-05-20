@@ -3,6 +3,7 @@
 -----------------------
 
 util.AddNetworkString( "padmin_notify" )
+util.AddNetworkString( "padmin_joindata" )
 
 
 
@@ -140,6 +141,23 @@ function sv_PAdmin.chat( ply, text, public )
 
 end
 hook.Add( "PlayerSay", "sv_padmin_chat", sv_PAdmin.chat )
+
+
+
+----------------------------------
+--  PLAYER CONNECT INFORMATION  --
+----------------------------------
+
+net.Receive( "padmin_joindata", function( len, pl )
+
+	local name = pl:Nick()
+	local teamname = string.upper( string.sub( pl:GetUserGroup(), 1, 1 ) ) .. string.sub( pl:GetUserGroup(), 2, string.len( pl:GetUserGroup() ) )
+	local teamcol = team.GetColor( pl:Team() )
+	local country = net.ReadString()
+
+	sv_PAdmin.notify( ply, { "lightblue", name, "white", " joined as ", teamcol, teamname, "white", " from " .. country .. "!" } )
+
+end )
 
 
 
