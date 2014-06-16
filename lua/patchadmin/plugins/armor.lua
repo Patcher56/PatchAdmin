@@ -16,7 +16,7 @@ function Plugin:Call( ply, args )
 	local ar = math.Clamp( tonumber( args["armor"] ) or 100, 0, 1000000000 )
 	pl:SetArmor( ar )
 
-	sv_PAdmin.notify( ply, { "lightblue", ply:Nick(), "white", " set the ", "red", "armor", "white", " for ", "lightblue", pl:Nick(), "white", " to ", "red", tostring( ar ), "white", "!" } )
+	sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " set the ", "red", "armor", "white", " for ", "lightblue", pl:Nick(), "white", " to ", "red", tostring( ar ), "white", "!" )
 
 end
 

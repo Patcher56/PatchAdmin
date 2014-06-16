@@ -61,7 +61,7 @@ function sv_PAdmin.chat( ply, text, public )
 				cmd[id + 1] = plys[1]
 				return plys[1]
 			elseif #plys > 1 then
-				sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" } )
+				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" )
 				return false
 			elseif #plys == 0 then
 				return false
@@ -113,7 +113,7 @@ function sv_PAdmin.chat( ply, text, public )
 
 				if #errors > 0 then
 
-					sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" } )
+					sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" )
 					return ""
 
 				end
@@ -124,7 +124,7 @@ function sv_PAdmin.chat( ply, text, public )
 			else
 
 				-- There are some missing args
-				sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" } )
+				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
 
 			end
 			
@@ -133,7 +133,7 @@ function sv_PAdmin.chat( ply, text, public )
 		else
 
 			-- The called command is not registered
-			sv_PAdmin.notify( ply, { "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" } )
+			sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" )
 
 		end
 
@@ -155,9 +155,49 @@ net.Receive( "padmin_joindata", function( len, pl )
 	local teamcol = team.GetColor( pl:Team() )
 	local country = net.ReadString()
 
-	sv_PAdmin.notify( ply, { "lightblue", name, "white", " joined as ", teamcol, teamname, "white", " from " .. country .. "!" } )
+	sv_PAdmin.notify( ply, "lightblue", name, "white", " joined as ", teamcol, teamname, "white", " from " .. country .. "!" )
 
 end )
+
+
+
+-------------
+--  RANKS  --
+-------------
+
+-- LOAD PLAYER RANKS
+function sv_PAdmin.LoadPlayerRanks( ply )
+
+	local index = sql.QueryValue( "SELECT rid FROM padmin_player_ranks WHERE uid = " .. ply:UniqueID() )
+	
+	if !index then return end
+
+	ply:SetTeam( index )
+	
+end
+hook.Add( "PlayerInitialSpawn", "padmin_loadplayerranks", sv_PAdmin.LoadPlayerRanks )
+
+-- LOAD RANKS
+function sv_PAdmin.LoadRanks()
+
+	local sql_teams = sql.Query( "SELECT * FROM padmin_ranks" )
+	local teams = team.GetAllTeams()
+
+	if !sql_teams or table.Count(sql_teams) == 0 then return end
+
+	local added = 0
+	table.foreach( sql_teams, function( id, sql_team )
+		local index = tonumber(sql_team.index)
+		team.SetUp( index, sql_team.nameid, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
+
+		teams[index].Alias = sql_team.alias
+		teams[index].Usergroup = sql_team.usergroup
+		added = added + 1
+
+	end )
+	
+end
+hook.Add( "InitPostEntity", "padmin_loadranks", sv_PAdmin.LoadRanks )
 
 
 
@@ -165,9 +205,11 @@ end )
 --  CHAT NOTIFICATION  --
 -------------------------
 
-function sv_PAdmin.notify( ply, data )
+function sv_PAdmin.notify( ply, ... )
 
-	for k, v in pairs( data ) do
+	local data = {...}
+
+	table.foreach( data, function( k, v )
 
 		if v == "red" then data[k] = Color( 255, 0, 0 )
 		elseif v == "green" then data[k] = Color( 0, 255, 0 )
@@ -176,7 +218,7 @@ function sv_PAdmin.notify( ply, data )
 		elseif v == "lightblue" then data[k] = Color( 0, 161, 255 )
 		end
 
-	end
+	end )
 
 	net.Start( "padmin_notify" )
 		net.WriteTable( data )

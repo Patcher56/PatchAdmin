@@ -15,32 +15,39 @@ function Plugin:Call( ply, args )
 	local rank = args["rank"]
 	if rank == pl:GetUserGroup() then return end
 
-	if rank == "superadmin" or rank == "admin" then
+	local teams = team.GetAllTeams()
 
-		pl:SetUserGroup( rank )
+	local index = -1
+	table.foreach( teams, function( id, team )
 
-		local check_rank = sql.Query( "SELECT rank FROM padmin_ranks WHERE uniqueid = " .. pl:UniqueID() )
-		if check_rank != nil and check_rank != false then
-			sql.Query( "UPDATE padmin_ranks SET rank = '" .. pl:GetUserGroup() .. "' WHERE uniqueid = " .. pl:UniqueID() )
-		else
-			sql.Query( "INSERT INTO padmin_ranks( uniqueid, rank ) VALUES( " .. pl:UniqueID() .. ", '" .. pl:GetUserGroup() .. "')" )
+		if rank == team.Name then
+			index = id
 		end
+
+	end )
+
+	if index == -1 then
+
+		sv_PAdmin.notify( nil, "red", rank, "white", " is not a valid rank!" )
+		return
 
 	end
 
-	sv_PAdmin.notify( nil, { "lightblue", ply:Nick(), "white", " ranked ", "lightblue", pl:Nick(), "white", " to a ", "red", rank } )
+	pl:SetTeam( index )
+	pl:SetUserGroup( teams[index].Usergroup )
+
+	if sql.Query( "SELECT rid FROM padmin_player_ranks WHERE uid = " .. pl:UniqueID() ) then
+
+		sql.Query( "UPDATE padmin_player_ranks SET rid = '" .. index .. "' WHERE uid = " .. pl:UniqueID() )
+
+	else
+
+		sql.Query( "INSERT INTO padmin_player_ranks( 'uid', 'rid' ) VALUES( '" .. pl:UniqueID() .. "', '" .. index .. "')" )
+
+	end
+
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " ranked ", "lightblue", pl:Nick(), "white", " to a ", teams[index].Color, teams[index].Alias )
 
 end
-
--- SET RANK IF A PLAYER JOINS THE SERVER
-function sv_PAdmin.SetupRanks( ply )
-
-	local rank = sql.QueryValue( "SELECT rank FROM padmin_ranks WHERE uniqueid = " .. ply:UniqueID() )
-	if rank == nil or rank == false then return end
-
-	if ply:GetUserGroup() != rank then ply:SetUserGroup( rank ) end
-	
-end
-hook.Add( "PlayerInitialSpawn", "padmin_setupranks", sv_PAdmin.SetupRanks )
 
 sv_PAdmin.AddPlugin( Plugin )

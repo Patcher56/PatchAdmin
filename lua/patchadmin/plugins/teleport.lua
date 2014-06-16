@@ -20,7 +20,7 @@ function Plugin:Call( ply, args )
 
 	from:SetPos( to:GetPos() )
 
-	sv_PAdmin.notify( ply, { "lightblue", ply:Nick(), "white", " teleported ", "lightblue", from:Nick(), "white", " to ", "lightblue", to:Nick(), "white", "!" } )
+	sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " teleported ", "lightblue", from:Nick(), "white", " to ", "lightblue", to:Nick(), "white", "!" )
 
 end
 
