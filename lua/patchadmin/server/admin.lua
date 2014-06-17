@@ -149,13 +149,8 @@ hook.Add( "PlayerSay", "sv_padmin_chat", sv_PAdmin.chat )
 ----------------------------------
 
 net.Receive( "padmin_joindata", function( len, pl )
-
-	local name = pl:Nick()
-	local teamname = string.upper( string.sub( pl:GetUserGroup(), 1, 1 ) ) .. string.sub( pl:GetUserGroup(), 2, string.len( pl:GetUserGroup() ) )
-	local teamcol = team.GetColor( pl:Team() )
-	local country = net.ReadString()
-
-	sv_PAdmin.notify( ply, "lightblue", name, "white", " joined as ", teamcol, teamname, "white", " from " .. country .. "!" )
+	
+	sv_PAdmin.Country = net.ReadString()
 
 end )
 
@@ -166,33 +161,41 @@ end )
 -------------
 
 -- LOAD PLAYER RANKS
-function sv_PAdmin.LoadPlayerRanks( ply )
+function sv_PAdmin.LoadPlayerRanks( ply, steamid, uniqueid )
 
-	local index = sql.QueryValue( "SELECT rid FROM padmin_player_ranks WHERE uid = " .. ply:UniqueID() )
-	
-	if !index then return end
+	-- Rank player
+	local index = tonumber( sql.QueryValue( "SELECT rid FROM padmin_player_ranks WHERE uid = " .. uniqueid ) )
+	if index then
+		ply:SetTeam( index )
+		ply:SetUserGroup( team.GetAllTeams()[index].Usergroup )
+	end
 
-	ply:SetTeam( index )
+	-- Send join-message
+	if sv_PAdmin.Country then
+		if team.GetName( ply:Team() ) != "Unassigned" then
+			sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), team.GetName( ply:Team() ), "white", " from " .. sv_PAdmin.Country .. "!" )
+		else
+			sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), "User", "white", " from " .. sv_PAdmin.Country .. "!" )
+		end
+	end
 	
 end
-hook.Add( "PlayerInitialSpawn", "padmin_loadplayerranks", sv_PAdmin.LoadPlayerRanks )
+hook.Add( "PlayerAuthed", "padmin_loadplayerranks", sv_PAdmin.LoadPlayerRanks )
 
 -- LOAD RANKS
 function sv_PAdmin.LoadRanks()
 
+	-- Get all saved teams
 	local sql_teams = sql.Query( "SELECT * FROM padmin_ranks" )
 	local teams = team.GetAllTeams()
+	if !sql_teams or table.Count( sql_teams ) == 0 then return end
 
-	if !sql_teams or table.Count(sql_teams) == 0 then return end
-
-	local added = 0
+	-- Setup ranks
 	table.foreach( sql_teams, function( id, sql_team )
-		local index = tonumber(sql_team.index)
-		team.SetUp( index, sql_team.nameid, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
 
-		teams[index].Alias = sql_team.alias
+		local index = tonumber( sql_team.index )
+		team.SetUp( index, sql_team.nameid, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
 		teams[index].Usergroup = sql_team.usergroup
-		added = added + 1
 
 	end )
 	
@@ -207,7 +210,7 @@ hook.Add( "InitPostEntity", "padmin_loadranks", sv_PAdmin.LoadRanks )
 
 function sv_PAdmin.notify( ply, ... )
 
-	local data = {...}
+	local data = { ... }
 
 	table.foreach( data, function( k, v )
 
