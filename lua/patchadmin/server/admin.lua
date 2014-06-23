@@ -148,11 +148,26 @@ hook.Add( "PlayerSay", "sv_padmin_chat", sv_PAdmin.chat )
 --  PLAYER CONNECT INFORMATION  --
 ----------------------------------
 
-net.Receive( "padmin_joindata", function( len, pl )
-	
-	sv_PAdmin.Country = net.ReadString()
+function sv_PAdmin.Connect( name, ip )
 
-end )
+	local adress = string.sub( ip, 1, string.find( ip, ":" ) - 1 )
+
+	http.Fetch(
+
+		"http://ip-api.com/json/" .. adress,
+
+		function( body, len, headers, code )
+
+			local data = util.JSONToTable( body )
+			if data["country"] == nil then return end
+			sv_PAdmin.notify( nil, Color( 255, 0, 255 ), name, "white", " connects ", "lightblue", data["country"], "white", "!" )
+
+		end
+
+	)
+
+end
+hook.Add( "PlayerConnect", "padmin_connecting", sv_PAdmin.Connect )
 
 
 
@@ -170,13 +185,11 @@ function sv_PAdmin.LoadPlayerRanks( ply, steamid, uniqueid )
 		ply:SetUserGroup( team.GetAllTeams()[index].Usergroup )
 	end
 
-	-- Send join-message
-	if sv_PAdmin.Country then
-		if team.GetName( ply:Team() ) != "Unassigned" then
-			sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), team.GetName( ply:Team() ), "white", " from " .. sv_PAdmin.Country .. "!" )
-		else
-			sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), "User", "white", " from " .. sv_PAdmin.Country .. "!" )
-		end
+	-- Message from connected players
+	if team.GetName( ply:Team() ) != "Unassigned" then
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), team.GetName( ply:Team() ), "white", "!" )
+	else
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), "User", "white", "!" )
 	end
 	
 end

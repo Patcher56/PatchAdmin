@@ -14,7 +14,6 @@ sh_PAdmin = {}
 
 AddCSLuaFile()
 AddCSLuaFile( "patchadmin/client/chat_functions.lua" )
-AddCSLuaFile( "patchadmin/client/join.lua" )
 
 
 
@@ -38,7 +37,6 @@ if SERVER then
 else
 
 	include( "patchadmin/client/chat_functions.lua" )
-	include( "patchadmin/client/join.lua" )
 	
 end
 
