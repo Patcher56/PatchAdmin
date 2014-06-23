@@ -160,7 +160,7 @@ function sv_PAdmin.Connect( name, ip )
 
 			local data = util.JSONToTable( body )
 			if data["country"] == nil then return end
-			sv_PAdmin.notify( nil, Color( 255, 0, 255 ), name, "white", " connects ", "lightblue", data["country"], "white", "!" )
+			sv_PAdmin.notify( nil, "red" name, "white", " connects from ", "lightblue", data["country"], "white", "!" )
 
 		end
 
