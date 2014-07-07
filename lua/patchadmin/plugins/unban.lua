@@ -11,7 +11,6 @@ local Plugin = {
 function Plugin:Call( ply, args )
 
 	local pl = args["PLAYER_1"]
-	if pl == nil or !pl:IsPlayer() then return end
 
 	if sql.Query( "SELECT time FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() ) then
 

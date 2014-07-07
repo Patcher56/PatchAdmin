@@ -17,7 +17,7 @@ function Plugin:Call( ply, args )
 	local curteam = pl:Team()
 
 	-- Check current rank
-	if rank == teams[curteam].Name or string.lower( rank ) == string.lower( teams[curteam].Name ) then
+	if string.lower( rank ) == string.lower( teams[curteam].Name ) then
 		sv_PAdmin.notify( ply, "lightblue", pl:Nick(), "white", " is already a ", team.GetColor( pl:Team() ), team.GetName( pl:Team() ), "white", "!" )
 		return
 	end
@@ -25,7 +25,7 @@ function Plugin:Call( ply, args )
 	-- Search rank
 	local index = -1
 	table.foreach( teams, function( id, team )
-		if rank == team.Name or string.lower( rank ) == string.lower( team.Name ) then
+		if string.lower( rank ) == string.lower( team.Name ) then
 			index = id
 		end
 	end )
@@ -48,6 +48,13 @@ function Plugin:Call( ply, args )
 	end
 
 	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " ranked ", "lightblue", pl:Nick(), "white", " to a ", team.GetColor( pl:Team() ), team.GetName( pl:Team() ) )
+
+end
+
+local PLAYER = FindMetaTable( "Player" )
+function PLAYER:GetRank()
+
+	return team.GetName( self:Team() ), team.GetColor( self:Team() )
 
 end
 

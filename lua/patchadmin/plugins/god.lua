@@ -17,7 +17,7 @@ function Plugin:Call( ply, args )
 		return
 	end
 
-	if pl.isGod == nil or !pl.isGod then
+	if !pl.isGod then
 
 		pl:GodEnable()
 		pl.isGod = true

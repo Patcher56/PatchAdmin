@@ -3,7 +3,7 @@ local Plugin = {
 	name = "CreateRank",
 	command = "createrank",
 	alias = { "crank" },
-	args_required = { "nameid", "usergroup", "red", "green", "blue" },
+	args_required = { "name", "usergroup", "red", "green", "blue" },
 	args_optional = {}
 
 }
@@ -11,7 +11,8 @@ local Plugin = {
 -- CREATE A RANK
 function Plugin:Call( ply, args )
 
-	local name = args["nameid"]
+	local name = args["name"]
+	local id = string.lower( string.Replace( name, " ", "_" ) )
 	local usergroup = args["usergroup"]
 	local r, g, b = tonumber( args["red"] ), tonumber( args["green"] ), tonumber( args["blue"] )
 	local col = r .. "-" .. g .. "-" .. b .. "-255"
@@ -27,9 +28,15 @@ function Plugin:Call( ply, args )
 	-- Create rank
 	team.SetUp( index, name, Color( r, g, b ), true )
 	teams[index].Usergroup = usergroup
+	teams[index].ID = id
 
 	-- Save rank
-	sql.Query( "INSERT INTO padmin_ranks( 'index', 'nameid', 'usergroup', 'color' ) VALUES( '" .. index .. "', '" .. name .. "', '" .. usergroup .. "', '" .. col .. "')" )
+	sql.Query( "INSERT INTO padmin_ranks( 'index', 'name', 'id', 'usergroup', 'color' ) VALUES( '" .. index .. "', '" .. name .. "', '" .. id .. "', '" .. usergroup .. "', '" .. col .. "')" )
+
+	net.Start( "padmin_createrank" )
+		net.WriteString( tostring( index ) )
+		net.WriteTable( teams[index] )
+	net.Broadcast()
 
 	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " created the rank ", Color( r, g, b ), name )
 

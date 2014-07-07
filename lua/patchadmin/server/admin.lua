@@ -1,12 +1,3 @@
------------------------
---  NETWORK STRINGS  --
------------------------
-
-util.AddNetworkString( "padmin_notify" )
-util.AddNetworkString( "padmin_joindata" )
-
-
-
 --------------------
 --  CHAT COMMAND  --
 --------------------
@@ -46,101 +37,99 @@ function sv_PAdmin.isPlugin( cmd )
 end
 
 -- RUN THE COMMAND
-function sv_PAdmin.chat( ply, text, public )
+function sv_PAdmin.Chat( ply, text, public )
 
-	if string.find( text, "^!" ) and string.len( text ) > 1 then
+	if !string.find( text, "^!" ) or string.len( text ) < 1 then return end
 
-		-- CONVERTING
-		local cmd = string.Explode( " ", text )
-		cmd[1] = string.Replace( cmd[1], "!", "" )
+	-- CONVERTING
+	local cmd = string.Explode( " ", text )
+	cmd[1] = string.Replace( cmd[1], "!", "" )
 
-		local function searchPlayer( id )
+	local function searchPlayer( id )
 
-			local plys = sv_PAdmin.getPlayer( cmd[id + 1] ) or {}
-			if #plys == 1 then
-				cmd[id + 1] = plys[1]
-				return plys[1]
-			elseif #plys > 1 then
-				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" )
-				return false
-			elseif #plys == 0 then
-				return false
-			end
-
-		end
-
-		-- CHECK REGISTERED PLUGINS
-		local plugin = sv_PAdmin.isPlugin( cmd[1] )
-
-		if plugin != false then
-
-			-- Check if all required arguments are here, then call the function
-			if #cmd - 1 >= #plugin.args_required then
-
-				local args = {}
-				local plug_args = {}
-				table.Add( plug_args, plugin.args_required )
-				table.Add( plug_args, plugin.args_optional )
-
-				-- Check if the arguments contain the "player"-keyword
-				local players = {}
-				table.foreach( plug_args, function( id, arg )
-
-					if string.find( arg, "PLAYER" ) and cmd[id + 1] != nil then
-						table.insert( players, searchPlayer( id ) )
-					end 
-
-				end )
-
-				-- If there are more args than needed
-				local cp = #plug_args
-				local cc = #cmd
-				if cp < cc - 1 then
-					cmd[cp + 1] = table.concat( cmd, " ", cp + 1, cc )
-				end
-
-				-- Set the args
-				table.foreach( plug_args, function( key, value )
-					args[value] = cmd[ key + 1 ]
-				end )
-
-				local errors = {}
-				table.foreach( players, function( pid, player )
-
-					if player == false then table.insert( errors, pid ) end
-
-				end )
-
-				if #errors > 0 then
-
-					sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" )
-					return ""
-
-				end
-
-				-- Run the command
-				plugin:Call( ply, args )
-
-			else
-
-				-- There are some missing args
-				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
-
-			end
-			
-			return ""
-
-		else
-
-			-- The called command is not registered
-			sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" )
-
+		local plys = sv_PAdmin.getPlayer( cmd[id + 1] ) or {}
+		if #plys == 1 then
+			cmd[id + 1] = plys[1]
+			return plys[1]
+		elseif #plys > 1 then
+			sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Found ", "lightblue", tostring( #plys ), "white", " players. Please be more specific!" )
+			return false
+		elseif #plys == 0 then
+			return false
 		end
 
 	end
 
+	-- CHECK REGISTERED PLUGINS
+	local plugin = sv_PAdmin.isPlugin( cmd[1] )
+
+	if plugin != false then
+
+		-- Check if all required arguments are here, then call the function
+		if #cmd - 1 >= #plugin.args_required then
+
+			local args = {}
+			local plug_args = {}
+			table.Add( plug_args, plugin.args_required )
+			table.Add( plug_args, plugin.args_optional )
+
+			-- Check if the arguments contain the "player"-keyword
+			local players = {}
+			table.foreach( plug_args, function( id, arg )
+
+				if string.find( arg, "PLAYER" ) and cmd[id + 1] != nil then
+					table.insert( players, searchPlayer( id ) )
+				end 
+
+			end )
+
+			-- If there are more args than needed
+			local cp = #plug_args
+			local cc = #cmd
+			if cp < cc - 1 then
+				cmd[cp + 1] = table.concat( cmd, " ", cp + 1, cc )
+			end
+
+			-- Set the args
+			table.foreach( plug_args, function( key, value )
+				args[value] = cmd[ key + 1 ]
+			end )
+
+			local errors = {}
+			table.foreach( players, function( pid, player )
+
+				if player == false then table.insert( errors, pid ) end
+
+			end )
+
+			if #errors > 0 then
+
+				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" )
+				return ""
+
+			end
+
+			-- Run the command
+			plugin:Call( ply, args )
+
+		else
+
+			-- There are some missing args
+			sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
+
+		end
+		
+		return ""
+
+	else
+
+		-- The called command is not registered
+		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" )
+
+	end
+
 end
-hook.Add( "PlayerSay", "sv_padmin_chat", sv_PAdmin.chat )
+hook.Add( "PlayerSay", "padmin_chat", sv_PAdmin.Chat )
 
 
 
@@ -166,6 +155,7 @@ function sv_PAdmin.Connect( name, ip )
 
 	)
 
+
 end
 hook.Add( "PlayerConnect", "padmin_connecting", sv_PAdmin.Connect )
 
@@ -180,20 +170,57 @@ function sv_PAdmin.LoadPlayerRanks( ply, steamid, uniqueid )
 
 	-- Rank player
 	local index = tonumber( sql.QueryValue( "SELECT rid FROM padmin_player_ranks WHERE uid = " .. uniqueid ) )
+
 	if index then
 		ply:SetTeam( index )
 		ply:SetUserGroup( team.GetAllTeams()[index].Usergroup )
 	end
-
+	
 	-- Message from connected players
 	if team.GetName( ply:Team() ) != "Unassigned" then
 		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), team.GetName( ply:Team() ), "white", "!" )
 	else
 		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " joined as ", team.GetColor( ply:Team() ), "User", "white", "!" )
 	end
+
+	local plugins = {}
+	table.foreach( sv_PAdmin.Plugins, function( key, value )
+
+		plugins[key] = {}
+		plugins[key].cmds = {}
+
+		table.foreach( value.alias, function( k, alias )
+
+			table.insert( plugins[key].cmds, alias )
+
+		end )
+
+		table.insert( plugins[key].cmds, value.command )
+		plugins[key].args_required = value.args_required
+		plugins[key].args_optional = value.args_optional
+
+	end )
+	
+	-- Send all commands
+	net.Start( "padmin_getplugins" )
+		net.WriteTable( plugins )
+	net.Send( ply )
 	
 end
 hook.Add( "PlayerAuthed", "padmin_loadplayerranks", sv_PAdmin.LoadPlayerRanks )
+
+function sv_PAdmin.LoadClientRanks( ply, steamid, uniqueid )
+
+	-- Get all saved teams
+	local sql_teams = sql.Query( "SELECT * FROM padmin_ranks" )
+	if !sql_teams or table.Count( sql_teams ) == 0 then return end
+
+	net.Start( "padmin_loadranks" )
+		net.WriteTable( sql_teams )
+	net.Broadcast()
+
+end
+hook.Add( "PlayerAuthed", "padmin_loadclientranks", sv_PAdmin.LoadClientRanks )
 
 -- LOAD RANKS
 function sv_PAdmin.LoadRanks()
@@ -207,8 +234,9 @@ function sv_PAdmin.LoadRanks()
 	table.foreach( sql_teams, function( id, sql_team )
 
 		local index = tonumber( sql_team.index )
-		team.SetUp( index, sql_team.nameid, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
+		team.SetUp( index, sql_team.name, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
 		teams[index].Usergroup = sql_team.usergroup
+		teams[index].ID = sql_team.id
 
 	end )
 	

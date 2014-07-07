@@ -11,8 +11,7 @@ local Plugin = {
 -- BAN A PLAYER
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
-	if pl != nil and !pl:IsPlayer() then return end
+	local pl = args["PLAYER_1"] or ply
 
 	local reason = args["reason"] or "No reason specified"
 	local time = 0

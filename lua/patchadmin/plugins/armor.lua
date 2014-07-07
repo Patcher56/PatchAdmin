@@ -10,8 +10,7 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
-	if pl == nil then pl = ply end
+	local pl = args["PLAYER_1"] or ply
 
 	local ar = math.Clamp( tonumber( args["armor"] ) or 100, 0, 1000000000 )
 	pl:SetArmor( ar )
