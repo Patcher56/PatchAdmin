@@ -21,13 +21,13 @@ function Plugin:Call( ply, args )
 
 		pl:GodEnable()
 		pl.isGod = true
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " enabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " enabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" )
 
 	else
 
 		pl:GodDisable()
 		pl.isGod = false
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " disabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " disabled ", "red", "godmode", "white", " for ", "lightblue", pl:Nick(), "white", "!" )
 
 	end
 

@@ -19,7 +19,7 @@ function Plugin:Call( ply, args )
 		pl:Kill()
 	end
 
-	sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " set the ", "red", "health", "white", " for ", "lightblue", pl:Nick(), "white", " to ", "red", tostring( hp ), "white", "!" )
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " set the ", "red", "health", "white", " for ", "lightblue", pl:Nick(), "white", " to ", "red", tostring( hp ), "white", "!" )
 
 end
 

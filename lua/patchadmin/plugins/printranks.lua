@@ -13,7 +13,7 @@ function Plugin:Call( ply, args )
 
 	PrintTable( team.GetAllTeams() )
 
-	sv_PAdmin.notify( nil, "red", "Ranks", "white", " were printed to the server console!" )
+	sv_PAdmin.notify( ply, "red", "Ranks", "white", " were printed to the server console!" )
 
 end
 

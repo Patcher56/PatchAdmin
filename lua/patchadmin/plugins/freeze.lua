@@ -18,7 +18,7 @@ function Plugin:Call( ply, args )
 
 		pl:Freeze( true )
 
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " has ", "red", "frozen ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " has frozen ", "lightblue", pl:Nick(), "white", "!" )
 
 	else
 
@@ -26,7 +26,7 @@ function Plugin:Call( ply, args )
 
 		pl:Freeze( false )
 
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "red", " melted ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " melted ", "lightblue", pl:Nick(), "white", "!" )
 
 	end
 

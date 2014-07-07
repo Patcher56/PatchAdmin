@@ -12,6 +12,11 @@ function Plugin:Call( ply, args )
 
 	local pl = args["PLAYER_1"] or ply
 
+	if args["fun"] != "" and args["fun"] != "1" then
+		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You didn't set the ", "lightblue", "fun-argument", "white", " currently! Use ", "red", "1", "white", " to use it!" )
+		return
+	end
+
 	if !pl.isStripped then
 
 		pl.isStripped = true
@@ -24,7 +29,7 @@ function Plugin:Call( ply, args )
 		
 		if !args["fun"] then pl:StripWeapons() end
 
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "red", " stripped ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " stripped ", "lightblue", pl:Nick(), "white", "!" )
 
 	else
 
@@ -34,7 +39,7 @@ function Plugin:Call( ply, args )
 			pl:Give( wep_class )
 		end )
 
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "white", " has given ", "lightblue", pl:Nick(), "white", " all Weapons ", "red", "back", "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " has given ", "lightblue", pl:Nick(), "white", " all Weapons back!" )
 
 	end
 

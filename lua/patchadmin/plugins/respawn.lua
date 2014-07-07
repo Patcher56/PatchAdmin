@@ -14,7 +14,7 @@ function Plugin:Call( ply, args )
 
 	pl:Spawn()
 
-	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "red", " respawned ", "lightblue", pl:Nick(), "white", "!" )
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " respawned ", "lightblue", pl:Nick(), "white", "!" )
 
 end
 

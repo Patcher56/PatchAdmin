@@ -16,7 +16,7 @@ function Plugin:Call( ply, args )
 	local reason = args["reason"] or "No reason specified"
 	local time = 0
 
-	if args.time != nil and args["time"] != 0 then
+	if args["time"] != nil and args["time"] != 0 then
 		time = os.time() + tonumber( args["time"] ) * 60
 	end
 
@@ -24,6 +24,8 @@ function Plugin:Call( ply, args )
 	pl:Kick( "Banned by " .. ply:Nick() .. "! (" .. reason .. ")" )
 
 	local bans = sql.Query( "SELECT * FROM padmin_bans" )
+
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " banned ", "lightblue", pl:Nick(), "white", " for ", "red", tostring( args["time"] ) .. " minutes", "white", " (" .. reason .. ")!" )
 
 end
 

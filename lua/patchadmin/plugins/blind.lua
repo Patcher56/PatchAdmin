@@ -15,12 +15,12 @@ function Plugin:Call( ply, args )
 	if !pl.isBlind then
 
 		pl.isBlind = true
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "red", " blinded ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " blinded ", "lightblue", pl:Nick(), "white", "!" )
 
 	else
 
 		pl.isBlind = false
-		sv_PAdmin.notify( ply, "lightblue", ply:Nick(), "red", " unblinded ", "lightblue", pl:Nick(), "white", "!" )
+		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " unblinded ", "lightblue", pl:Nick(), "white", "!" )
 
 	end
 

@@ -16,6 +16,8 @@ function Plugin:Call( ply, args )
 
 	pl:Kick( "Kicked by " .. ply:Nick() .. "! (" .. reason .. ")" )
 
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " kicked ", "lightblue", pl:Nick(), "white", " from the server!" )
+
 end
 
 sv_PAdmin.AddPlugin( Plugin )
