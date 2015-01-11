@@ -9,18 +9,20 @@ function PLAYER:GetRank()
 
 end
 
-net.Receive( "padmin_loadranks", function( len )
+function cl_PAdmin.setupTeam( index, name, color, join, group, id )
 
 	local teams = team.GetAllTeams()
 
-	-- Setup ranks
+	team.SetUp( index, name, color, join )
+	teams[index].Usergroup = group
+	teams[index].ID = id
+
+end
+
+net.Receive( "padmin_loadranks", function( len )
+
 	table.foreach( net.ReadTable(), function( id, sql_team )
-
-		local index = tonumber( sql_team.index )
-		team.SetUp( index, sql_team.name, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true )
-		teams[index].Usergroup = sql_team.usergroup
-		teams[index].ID = sql_team.id
-
+		cl_PAdmin.setupTeam( tonumber( sql_team.index ), sql_team.name, Color( unpack( string.Explode( "-", sql_team.color ) ) ), true, sql_team.usergroup, sql_team.id )
 	end )
 
 end )
@@ -29,11 +31,8 @@ net.Receive( "padmin_createrank", function( len )
 
 	local index = tonumber( net.ReadString() )
 	local newTeam = net.ReadTable()
-	local teams = team.GetAllTeams()
 
-	team.SetUp( index, newTeam.Name, newTeam.Color, newTeam.Joinable )
-	teams[index].Usergroup = newTeam.Usergroup
-	teams[index].ID = newTeam.id
+	cl_PAdmin.setupTeam( index, newTeam.Name, newTeam.Color, newTeam.Joinable, newTeam.Usergroup, newTeam.id )
 
 end )
 

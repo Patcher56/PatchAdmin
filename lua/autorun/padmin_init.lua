@@ -30,7 +30,6 @@ if SERVER then
 	-- Include Files
 	include( "patchadmin/server/sql.lua" )
 	include( "patchadmin/server/admin.lua" )
-	include( "patchadmin/server/plugins.lua" )
 	
 	local files = file.Find( "patchadmin/plugins/*.lua", "LUA" )
 	table.foreach( files, function( key, plugin )

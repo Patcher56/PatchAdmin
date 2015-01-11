@@ -58,4 +58,4 @@ function PLAYER:GetRank()
 
 end
 
-sv_PAdmin.AddPlugin( Plugin )
+sv_PAdmin.addPlugin( Plugin )

@@ -32,4 +32,4 @@ function Plugin:Call( ply, args )
 
 end
 
-sv_PAdmin.AddPlugin( Plugin )
+sv_PAdmin.addPlugin( Plugin )

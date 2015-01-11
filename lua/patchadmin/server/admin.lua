@@ -1,47 +1,66 @@
---------------------
---  CHAT COMMAND  --
---------------------
+----------------------
+--  PLAYER CONVERT  --
+----------------------
 
 -- CONVERT PLAYERNAME TO PLAYER
 function sv_PAdmin.getPlayer( plyname )
 
 	if plyname == nil then return end
 
-	local plys = player.GetAll()
 	local result = {}
 
-	table.foreach( plys, function( id, player )
-
+	table.foreach( player.GetAll(), function( id, player )
 		if string.find( string.lower( player:Nick() ), string.lower( plyname ) ) then
 			table.insert( result, player )
 		end
-
 	end )
 
 	return result
 
 end
 
-function sv_PAdmin.isPlugin( cmd )
 
-	local plug = false
 
-	table.foreach( sv_PAdmin.Plugins, function( name, plugin )
+--------------
+--  PLUGIN  --
+--------------
 
-		if plugin["command"] == cmd or table.HasValue( plugin["alias"], cmd ) then plug = plugin end
+-- PLUGIN MANAGEMENT
+sv_PAdmin.Plugins = {}
 
-	end )
-	
-	return plug
+function sv_PAdmin.addPlugin( inf )
+
+	local name = string.lower( inf.name )
+	sv_PAdmin.Plugins[name] = inf
+
+	print( "Registered plugin " .. name )
 
 end
+
+function sv_PAdmin.getPlugin( cmd )
+
+	local p = false
+
+	table.foreach( sv_PAdmin.Plugins, function( name, plugin )
+		if plugin.command == cmd or table.HasValue( plugin.alias, cmd ) then p = plugin end
+	end )
+	
+	return p
+
+end
+
+
+
+--------------------
+--  CHAT COMMAND  --
+--------------------
 
 -- RUN THE COMMAND
 function sv_PAdmin.Chat( ply, text, public )
 
 	if !string.find( text, "^!" ) or string.len( text ) < 1 then return end
 
-	-- CONVERTING
+	-- Convert string-command to table
 	local cmd = string.Explode( " ", text )
 	cmd[1] = string.Replace( cmd[1], "!", "" )
 
@@ -60,73 +79,57 @@ function sv_PAdmin.Chat( ply, text, public )
 
 	end
 
-	-- CHECK REGISTERED PLUGINS
-	local plugin = sv_PAdmin.isPlugin( cmd[1] )
-
-	if plugin != false then
-
-		-- Check if all required arguments are here, then call the function
-		if #cmd - 1 >= #plugin.args_required then
-
-			local args = {}
-			local plug_args = {}
-			table.Add( plug_args, plugin.args_required )
-			table.Add( plug_args, plugin.args_optional )
-
-			-- Check if the arguments contain the "player"-keyword
-			local players = {}
-			table.foreach( plug_args, function( id, arg )
-
-				if string.find( arg, "PLAYER" ) and cmd[id + 1] != nil then
-					table.insert( players, searchPlayer( id ) )
-				end 
-
-			end )
-
-			-- If there are more args than needed
-			local cp = #plug_args
-			local cc = #cmd
-			if cp < cc - 1 then
-				cmd[cp + 1] = table.concat( cmd, " ", cp + 1, cc )
-			end
-
-			-- Set the args
-			table.foreach( plug_args, function( key, value )
-				args[value] = cmd[ key + 1 ]
-			end )
-
-			local errors = {}
-			table.foreach( players, function( pid, player )
-
-				if player == false then table.insert( errors, pid ) end
-
-			end )
-
-			if #errors > 0 then
-
-				sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" )
-				return ""
-
-			end
-
-			-- Run the command
-			plugin:Call( ply, args )
-
-		else
-
-			-- There are some missing args
-			sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
-
-		end
-		
-		return ""
-
-	else
-
-		-- The called command is not registered
+	-- Check if plugin is registred
+	local plugin = sv_PAdmin.getPlugin( cmd[1] )
+	if plugin == false then
 		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" )
-
+		return
 	end
+
+	-- Check amount of required arguments
+	if #cmd - 1 < #plugin.args_required then
+		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
+		return
+	end
+
+	-- Combine required and optional arguments
+	local args = {}
+	local plug_args = {}
+	table.Add( plug_args, plugin.args_required )
+	table.Add( plug_args, plugin.args_optional )
+
+	-- Check argument-overflow
+	local cp = #plug_args
+	local cc = #cmd
+	if cp < cc - 1 then
+		cmd[cp + 1] = table.concat( cmd, " ", cp + 1, cc )
+	end
+
+	-- Convert "PLAYER"-keywords to real players
+	local players = {}
+	table.foreach( plug_args, function( id, arg )
+		if string.find( arg, "PLAYER" ) and cmd[id + 1] != nil then
+			table.insert( players, searchPlayer( id ) )
+		end
+	end )
+
+	-- Check possible erros from "PLAYER"-convert
+	local errors = {}
+	table.foreach( players, function( pid, player )
+		if player == false then table.insert( errors, pid ) end
+	end )
+	if #errors > 0 then
+		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "Player " .. table.concat( errors, " and " ) .. " couldn't be found!" )
+		return ""
+	end
+
+	-- Set the args
+	table.foreach( plug_args, function( key, value ) args[value] = cmd[ key + 1 ] end )
+
+	-- Run the command
+	plugin:Call( ply, args )
+
+	return ""
 
 end
 hook.Add( "PlayerSay", "padmin_chat", sv_PAdmin.Chat )
@@ -142,19 +145,13 @@ function sv_PAdmin.Connect( name, ip )
 	local adress = string.sub( ip, 1, string.find( ip, ":" ) - 1 )
 
 	http.Fetch(
-
 		"http://ip-api.com/json/" .. adress,
-
 		function( body, len, headers, code )
-
 			local data = util.JSONToTable( body )
 			if data["country"] == nil then return end
 			sv_PAdmin.notify( nil, Color( 255, 255, 100 ), name, "white", " connects from ", "lightblue", data["country"], "white", "!" )
-
 		end
-
 	)
-
 
 end
 hook.Add( "PlayerConnect", "padmin_connecting", sv_PAdmin.Connect )
@@ -190,9 +187,7 @@ function sv_PAdmin.LoadPlayerRanks( ply, steamid, uniqueid )
 		plugins[key].cmds = {}
 
 		table.foreach( value.alias, function( k, alias )
-
 			table.insert( plugins[key].cmds, alias )
-
 		end )
 
 		table.insert( plugins[key].cmds, value.command )
@@ -217,7 +212,7 @@ function sv_PAdmin.LoadClientRanks( ply, steamid, uniqueid )
 
 	net.Start( "padmin_loadranks" )
 		net.WriteTable( sql_teams )
-	net.Broadcast()
+	net.Send( ply )
 
 end
 hook.Add( "PlayerAuthed", "padmin_loadclientranks", sv_PAdmin.LoadClientRanks )

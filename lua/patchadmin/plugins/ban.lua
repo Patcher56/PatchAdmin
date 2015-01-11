@@ -50,4 +50,4 @@ function sv_PAdmin.checkBans( ply, steamid, uniqueid )
 end
 hook.Add( "PlayerAuthed", "padmin_checkBans", sv_PAdmin.checkBans )
 
-sv_PAdmin.AddPlugin( Plugin )
+sv_PAdmin.addPlugin( Plugin )
