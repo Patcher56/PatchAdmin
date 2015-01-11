@@ -35,8 +35,7 @@ function cl_PAdmin.ChatPrefix( ply, text, team, isDead )
 	end
 	
 	if IsValid( ply ) then
-		-- Set Prefix
-		local rank, color = ply:GetRank()
+		local rank, color = ply:getRank()
 		table.insert( tab, color )
 		table.insert( tab, "[" .. rank .. "] " )
 		table.insert( tab, ply )

@@ -29,14 +29,7 @@ function cl_PAdmin.CommandAssistant()
 		table.foreach( plugin.cmds, function( k, cmd )
 
 			if string.find( cmd, "^" .. search_cmd ) then
-
-				res[cmd] = {
-
-					args_req = plugin.args_required,
-					args_opt = plugin.args_optional
-
-				}
-
+				res[cmd] = { args_req = plugin.args_required, args_opt = plugin.args_optional }
 			end
 
 		end )
@@ -85,7 +78,7 @@ function cl_PAdmin.CommandAssistant()
 end
 hook.Add( "HUDPaint", "padmin_commandassistant", cl_PAdmin.CommandAssistant )
 
-function cl_PAdmin.ChatContent( text )
+function cl_PAdmin.getChat( text )
 
 	if text == "" or !string.find( text, "^!" ) then
 		search_cmd = ""
@@ -100,14 +93,14 @@ function cl_PAdmin.ChatContent( text )
 	search_cmd = string.Replace( text, "!", "" )
 
 end
-hook.Add( "ChatTextChanged", "padmin_getchatcontent", cl_PAdmin.ChatContent )
+hook.Add( "ChatTextChanged", "padmin_getchat", cl_PAdmin.getChat )
 
-function cl_PAdmin.FinishChat()
+function cl_PAdmin.finishChat()
 
 	search_cmd = ""
 
 end
-hook.Add( "FinishChat", "padmin_finishchat", cl_PAdmin.FinishChat )
+hook.Add( "FinishChat", "padmin_finishchat", cl_PAdmin.finishChat )
 
 --[[
 ----------------

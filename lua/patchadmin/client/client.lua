@@ -3,7 +3,7 @@
 ----------
 
 local PLAYER = FindMetaTable( "Player" )
-function PLAYER:GetRank()
+function PLAYER:getRank()
 
 	return team.GetName( self:Team() ), team.GetColor( self:Team() )
 
@@ -41,25 +41,18 @@ end )
 -----------
 -- BLIND --
 -----------
-function cl_PAdmin.MakeBlind()
+
+function cl_PAdmin.makeBlind()
 
 	if !LocalPlayer().isBlind then return end
 	draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 0, 0, 0 ) )
 
 end
-hook.Add( "HUDPaint", "padmin_makeblind", cl_PAdmin.MakeBlind )
+hook.Add( "HUDPaint", "padmin_makeblind", cl_PAdmin.makeBlind )
 
 net.Receive( "padmin_blinded", function( len )
 
-	if net.ReadString() == "true" then
-
-		LocalPlayer().isBlind = true
-
-	else
-
-		LocalPlayer().isBlind = false
-
-	end
+	LocalPlayer().isBlind = tobool( net.ReadString() )
 
 end )
 

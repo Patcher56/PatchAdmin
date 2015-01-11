@@ -83,13 +83,13 @@ function sv_PAdmin.Chat( ply, text, public )
 	local plugin = sv_PAdmin.getPlugin( cmd[1] )
 	if plugin == false then
 		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "lightblue", "'" .. cmd[1] .. "'", "white", " is not a registered plugin!" )
-		return
+		return ""
 	end
 
 	-- Check amount of required arguments
 	if #cmd - 1 < #plugin.args_required then
 		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You need more ", "lightblue", "args", "white", " to run ", "red", "!" .. cmd[1], "white", "!" )
-		return
+		return ""
 	end
 
 	-- Combine required and optional arguments
