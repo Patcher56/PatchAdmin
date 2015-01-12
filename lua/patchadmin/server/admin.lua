@@ -148,8 +148,8 @@ function sv_PAdmin.Connect( name, ip )
 		"http://ip-api.com/json/" .. adress,
 		function( body, len, headers, code )
 			local data = util.JSONToTable( body )
-			if data["country"] == nil then return end
-			sv_PAdmin.notify( nil, Color( 255, 255, 100 ), name, "white", " connects from ", "lightblue", data["country"], "white", "!" )
+			if data.country == nil then return end
+			sv_PAdmin.notify( nil, Color( 255, 255, 100 ), name, "white", " connects from ", "lightblue", data.country, "white", "!" )
 		end
 	)
 

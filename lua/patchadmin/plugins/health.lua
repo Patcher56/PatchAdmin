@@ -10,14 +10,12 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
+	local pl = args.PLAYER_1 or ply
 
-	local hp = math.Clamp( tonumber( args["health"] ) or 100, 0, 1000000000 ) 
+	local hp = math.Clamp( tonumber( args.health ) or 100, 0, 1000000000 ) 
 	pl:SetHealth( hp )
 	
-	if hp == 0 then
-		pl:Kill()
-	end
+	if hp == 0 then pl:Kill() end
 
 	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " set the ", "red", "health", "white", " for ", "lightblue", pl:Nick(), "white", " to ", "red", tostring( hp ), "white", "!" )
 

@@ -11,19 +11,18 @@ local Plugin = {
 -- RANK A PLAYER
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
-	local rank = args["rank"]
+	local pl = args.PLAYER_1
+	local rank = args.rank
 	local teams = team.GetAllTeams()
-	local curteam = pl:Team()
 
 	-- Check current rank
-	if string.lower( rank ) == string.lower( teams[curteam].Name ) then
+	if string.lower( rank ) == string.lower( teams[pl:Team()].Name ) then
 		sv_PAdmin.notify( ply, "lightblue", pl:Nick(), "white", " is already a ", team.GetColor( pl:Team() ), team.GetName( pl:Team() ), "white", "!" )
 		return
 	end
 
 	-- Search rank
-	local index = -1
+	local index = nil
 	table.foreach( teams, function( id, team )
 		if string.lower( rank ) == string.lower( team.Name ) then
 			index = id
@@ -31,7 +30,7 @@ function Plugin:Call( ply, args )
 	end )
 
 	-- Check rank
-	if index == -1 then
+	if !index then
 		sv_PAdmin.notify( ply, "white", "'", "red", rank, "white", "' is not a valid rank!" )
 		return
 	end

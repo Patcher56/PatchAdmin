@@ -10,9 +10,9 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
+	local pl = args.PLAYER_1 or ply
 
-	if args["fun"] != "" and args["fun"] != "1" then
+	if args.fun != "" and args.fun != "1" then
 		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "You didn't set the ", "lightblue", "fun-argument", "white", " currently! Use ", "red", "1", "white", " to use it!" )
 		return
 	end
@@ -24,10 +24,10 @@ function Plugin:Call( ply, args )
 
 		table.foreach( pl:GetWeapons(), function( key, weapon )
 			table.insert( pl.strippedWeapons, weapon:GetClass() )
-			if args["fun"] == "1" then pl:DropWeapon( weapon ) end
+			if args.fun == "1" then pl:DropWeapon( weapon ) end
 		end )
 		
-		if !args["fun"] then pl:StripWeapons() end
+		if !args.fun then pl:StripWeapons() end
 
 		sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " stripped ", "lightblue", pl:Nick(), "white", "!" )
 

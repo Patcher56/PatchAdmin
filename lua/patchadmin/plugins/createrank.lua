@@ -11,10 +11,10 @@ local Plugin = {
 -- CREATE A RANK
 function Plugin:Call( ply, args )
 
-	local name = args["name"]
+	local name = args.name
 	local id = string.lower( string.Replace( name, " ", "_" ) )
-	local usergroup = args["usergroup"]
-	local r, g, b = tonumber( args["red"] ), tonumber( args["green"] ), tonumber( args["blue"] )
+	local usergroup = args.usergroup
+	local r, g, b = tonumber( args.red ), tonumber( args.green ), tonumber( args.blue )
 	local col = r .. "-" .. g .. "-" .. b .. "-255"
 	local teams = team.GetAllTeams()
 	local index = table.maxn( teams ) + 1
@@ -31,7 +31,7 @@ function Plugin:Call( ply, args )
 	teams[index].ID = id
 
 	-- Save rank
-	sql.Query( "INSERT INTO padmin_ranks( 'index', 'name', 'id', 'usergroup', 'color' ) VALUES( '" .. index .. "', '" .. name .. "', '" .. id .. "', '" .. usergroup .. "', '" .. col .. "')" )
+	sql.Query( "INSERT INTO padmin_ranks( 'index', 'name', 'id', 'usergroup', 'color' ) VALUES ( '" .. index .. "', '" .. name .. "', '" .. id .. "', '" .. usergroup .. "', '" .. col .. "')" )
 
 	net.Start( "padmin_createrank" )
 		net.WriteString( tostring( index ) )

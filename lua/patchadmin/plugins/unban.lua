@@ -10,7 +10,7 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"]
+	local pl = args.PLAYER_1
 
 	if sql.Query( "SELECT time FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() ) then
 		sql.Query( "DELETE FROM padmin_bans WHERE uniqueid = " .. pl:UniqueID() )

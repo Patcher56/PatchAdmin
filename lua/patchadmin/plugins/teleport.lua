@@ -10,10 +10,10 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local from = args["PLAYER_1"]
-	local to = args["PLAYER_2"]
+	local from = args.PLAYER_1
+	local to = args.PLAYER_2
 	
-	if to == nil then
+	if !to then
 		to = from
 		from = ply
 	end

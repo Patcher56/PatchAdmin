@@ -10,7 +10,7 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
+	local pl = args.PLAYER_1 or ply
 
 	pl:Kill()
 	

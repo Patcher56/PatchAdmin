@@ -11,13 +11,13 @@ local Plugin = {
 -- BAN A PLAYER
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
+	local pl = args.PLAYER_1 or ply
 
-	local reason = args["reason"] or "No reason specified"
+	local reason = args.reason or "No reason specified"
 	local time = 0
 
-	if args["time"] != nil and args["time"] != 0 then
-		time = os.time() + tonumber( args["time"] ) * 60
+	if args.time != nil and args.time != 0 then
+		time = os.time() + tonumber( args.time ) * 60
 	end
 
 	sql.Query( "INSERT INTO padmin_bans( uniqueid, time ) VALUES( " .. pl:UniqueID() .. ", " .. time .. ")" )
@@ -25,7 +25,7 @@ function Plugin:Call( ply, args )
 
 	local bans = sql.Query( "SELECT * FROM padmin_bans" )
 
-	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " banned ", "lightblue", pl:Nick(), "white", " for ", "red", tostring( args["time"] ) .. " minutes", "white", " (" .. reason .. ")!" )
+	sv_PAdmin.notify( nil, "lightblue", ply:Nick(), "white", " banned ", "lightblue", pl:Nick(), "white", " for ", "red", tostring( args.time ) .. " minutes", "white", " (" .. reason .. ")!" )
 
 end
 
@@ -33,7 +33,7 @@ end
 function sv_PAdmin.checkBans( ply, steamid, uniqueid )
 
 	local time = sql.QueryRow( "SELECT time FROM padmin_bans WHERE uniqueid = " .. uniqueid )
-	if time == nil then return else time = tonumber( time["time"] ) end
+	if time == nil then return else time = tonumber( time.time ) end
 	
 	local rem_time = time - os.time()
 

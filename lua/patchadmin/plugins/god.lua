@@ -10,9 +10,9 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
+	local pl = args.PLAYER_1 or ply
 
-	if GetConVarNumber("sbox_godmode") == 1 then
+	if GetConVarNumber( "sbox_godmode" ) == 1 then
 		sv_PAdmin.notify( ply, "red", "[PAdmin - ERROR] ", "white", "ConVar ", "lightblue", "sbox_godmode", "white", " is currently ", "red", "enabled", "white", "!" )
 		return
 	end

@@ -10,9 +10,8 @@ local Plugin = {
 
 function Plugin:Call( ply, args )
 
-	local pl = args["PLAYER_1"] or ply
-
-	local reason = args["reason"] or "No reason specified"
+	local pl = args.PLAYER_1 or ply
+	local reason = args.reason or "No reason specified"
 
 	pl:Kick( "Kicked by " .. ply:Nick() .. "! (" .. reason .. ")" )
 
