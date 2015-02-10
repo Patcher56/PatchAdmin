@@ -1,3 +1,23 @@
+-----------------------------------
+-- SERVER - PLAYER COMMUNICATION --
+-----------------------------------
+
+local syncData = {}
+net.Receive( "padmin_send", function( len )
+
+	local typ = net.ReadString()
+	local insert = tobool( net.ReadBit() )
+	if !insert then
+		syncData[ typ ] = net.ReadTable()		
+	else
+		syncData[ typ ] = syncData[ typ ] or {}
+		table.insert( syncData[ typ ], net.ReadTable() )
+	end
+
+end )
+
+
+
 ----------
 -- RANK --
 ----------
@@ -44,17 +64,31 @@ end )
 
 function cl_PAdmin.makeBlind()
 
-	if !LocalPlayer().isBlind then return end
+	if !syncData.blind or !syncData.blind[1] then return end
 	draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 0, 0, 0 ) )
 
 end
 hook.Add( "HUDPaint", "padmin_makeblind", cl_PAdmin.makeBlind )
 
-net.Receive( "padmin_blinded", function( len )
 
-	LocalPlayer().isBlind = tobool( net.ReadString() )
 
-end )
+------------------
+-- ANNOUNCEMENT --
+------------------
+
+function cl_PAdmin.makeAnnouncement()
+
+	if !syncData.announcement then return end
+	table.foreach( syncData.announcement, function( key, ann )
+
+		if SysTime() >= ann[3] then table.remove( syncData.announcement, key ) end
+		
+		draw.SimpleText( ann[2], "padmin_roboto_32", ScrW() / 2, 100 + ( ( key - 1 ) * 40 ), Color( 255, 255, 255 ), 1, 1, 1, Color( 50, 50, 50 ) )
+
+	end )
+
+end
+hook.Add( "HUDPaint", "padmin_makeannouncement", cl_PAdmin.makeAnnouncement )
 
 
 

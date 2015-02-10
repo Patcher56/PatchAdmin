@@ -3,6 +3,7 @@
 -------------------------
 
 AddCSLuaFile()
+AddCSLuaFile( "patchadmin/client/fonts.lua" )
 AddCSLuaFile( "patchadmin/client/chat_functions.lua" )
 AddCSLuaFile( "patchadmin/client/chat_style.lua" )
 AddCSLuaFile( "patchadmin/client/client.lua" )
@@ -25,11 +26,12 @@ if SERVER then
 	util.AddNetworkString( "padmin_getplugins" )
 	util.AddNetworkString( "padmin_notify" )
 	util.AddNetworkString( "padmin_joindata" )
-	util.AddNetworkString( "padmin_blinded" )
+	util.AddNetworkString( "padmin_send" )
 
 	-- Include Files
 	include( "patchadmin/server/sql.lua" )
 	include( "patchadmin/server/admin.lua" )
+	include( "patchadmin/server/server.lua" )
 	
 	local files = file.Find( "patchadmin/plugins/*.lua", "LUA" )
 	table.foreach( files, function( key, plugin )
@@ -45,6 +47,7 @@ else
 	sh_PAdmin = {}
 
 	-- Included Files
+	include( "patchadmin/client/fonts.lua" )
 	include( "patchadmin/client/chat_functions.lua" )
 	include( "patchadmin/client/chat_style.lua" )
 	include( "patchadmin/client/client.lua" )

@@ -24,9 +24,7 @@ function Plugin:Call( ply, args )
 
 	end
 
-	net.Start( "padmin_blinded" )
-		net.WriteString( tostring( pl.isBlind ) )
-	net.Send( pl )
+	sv_PAdmin.send( pl, "blind", false, pl.isBlind )
 
 end
 
