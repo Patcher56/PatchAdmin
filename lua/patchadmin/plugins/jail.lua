@@ -28,9 +28,7 @@ local function unjail( pl )
 		ent:Remove()
 	end )
 
-	table.foreach( pl.strippedWeapons, function( key, wep_class )
-		pl:Give( wep_class )
-	end )
+	self.Strip:Unstrip( pl )
 
 	pl:GodDisable()
 
@@ -48,14 +46,11 @@ function Plugin:Call( ply, args )
 
 		local freeze = sv_PAdmin.getPlugin( "freeze" )
 		pl:Freeze( true )
+
 		pl:GodEnable()
 
-		pl.strippedWeapons = {}
-		table.foreach( pl:GetWeapons(), function( key, weapon )
-			table.insert( pl.strippedWeapons, weapon:GetClass() )
-			if args.fun == "1" then pl:DropWeapon( weapon ) end
-		end )
-		pl:StripWeapons()
+		self.Strip = sv_PAdmin.getPlugin( "strip" )
+		self.Strip:Strip( pl )
 
 		local pos = pl:GetPos()
 
