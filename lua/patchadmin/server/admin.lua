@@ -215,7 +215,7 @@ function sv_PAdmin.LoadClientRanks( ply, steamid, uniqueid )
 	net.Send( ply )
 
 end
-hook.Add( "PlayerAuthed", "padmin_loadclientranks", sv_PAdmin.LoadClientRanks )
+hook.Add( "PlayerInitialSpawn", "padmin_loadclientranks", sv_PAdmin.LoadClientRanks )
 
 -- LOAD RANKS
 function sv_PAdmin.LoadRanks()
